@@ -1,0 +1,26 @@
+namespace GraphMaker
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+      
+        private void button1_Click(object sender, EventArgs e)
+        { int.TryParse(comboBox1.SelectedItem.ToString(), out int selectedone);
+            Form2 form2 = new Form2(selectedone);
+            form2.ShowDialog();
+        }
+    }
+}
