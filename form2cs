@@ -1,0 +1,101 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
+
+namespace GraphMaker
+{
+    public partial class Form2 : Form
+    {
+        public List<TextBox> dynamicTextBoxes = new List<TextBox>();
+        public Form2(int numberOfTextBoxes)
+        {
+            InitializeComponent();
+            for (int i = 0; i < numberOfTextBoxes; i++)
+            {
+                TextBox textBox = new TextBox();
+                Label label = new Label();
+                textBox.Location = new Point(100, 10 + i * 30); // TextBox'ların konumu
+                label.Location = new Point(0, 10 + i * 30);//Labelların
+                label.Text = "Label" + i + ":";
+                this.Controls.Add(label);
+                this.Controls.Add(textBox);
+                dynamicTextBoxes.Add(textBox);
+            }
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
+      
+    
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int toplam = 0;
+            int startX = 500; // Label'ların başlangıç X konumu
+            int startY = 50;  // Label'ların başlangıç Y konumu
+            int labelHeight = 20; // L
+
+            foreach (TextBox textBox in dynamicTextBoxes)
+            {
+                if (int.TryParse(textBox.Text, out int degerler))
+                {
+                    toplam += degerler;
+                 
+                }
+            }
+            Random rgb=new Random();
+           
+            // Yüzdeleri hesapla ve pasta grafiği oluştur
+            if (toplam > 0)
+            {
+                int startAngle = 0;
+
+                for (int i = 0; i < dynamicTextBoxes.Count; i++)
+                {
+                    if (int.TryParse(dynamicTextBoxes[i].Text, out int deger))
+                    {
+                        float yüzde = (float)deger / toplam;
+                        int derece = (int)(yüzde * 360);
+                        int a = rgb.Next(0, 255);
+                        int b = rgb.Next(0, 255);
+                        using (SolidBrush brush = new SolidBrush(Color.FromArgb(255,a ,b , 15)))
+                        {
+                            Graphics g = this.CreateGraphics();
+                            Rectangle rectangle = new Rectangle(250,50, 250, 250);
+                            g.FillPie(brush, rectangle, startAngle, derece);
+                      
+                            startAngle += derece;
+
+                            // Label'ı oluşturun ve ayarlayın
+                            Label lbl = new Label();
+                            lbl.Text= "Value" + i + ": " + deger;
+                            lbl.ForeColor = brush.Color;//thats it bro 
+                            lbl.Location = new Point(startX, startY); // Label'ın konumu
+                            lbl.Height = labelHeight; // Label yüksekliği
+                            this.Controls.Add(lbl); // Label'ı formunuza ekleyin
+
+                            // Label'ın Y konumunu bir sonraki için artırın
+                            startY += labelHeight + 5;
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Toplam 0 olduğu için pasta grafiği çizilemedi.");
+            }
+
+        }
+            
+        }
+    }
